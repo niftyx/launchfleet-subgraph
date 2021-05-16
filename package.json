@@ -1,0 +1,46 @@
+{
+  "name": "launchfleet-subgraph",
+  "version": "1.0.0",
+  "description": "Subgraph for launchfleet",
+  "main": "index.js",
+  "scripts": {
+    "test": "yarn test",
+    "codegen": "node ./scripts/codegen-prepare.js --input=./contracts/build/contracts --output=./abis && yarn graph codegen",
+    "build": "yarn graph build",
+    "prepare:mumbai": "mustache config/mumbai.json subgraph.template.yaml > subgraph.yaml",
+    "prepare:matic": "mustache config/matic.json subgraph.template.yaml > subgraph.yaml",
+    "deploy:mumbai": "yarn graph deploy altbee/launch-test --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --access-token ab245ab70624402a9eb90c39badaae67",
+    "deploy:matic": "yarn graph deploy altbee/launch-test --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --access-token ab245ab70624402a9eb90c39badaae67",
+    "lint": "yarn run eslint './src/**/*.{ts,tsx}' --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/niftyx/launchfleet-subgraph.git"
+  },
+  "keywords": [
+    "thegraph",
+    "launchfleet"
+  ],
+  "author": "Altbee (liaojikundever@gmail.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/niftyx/launchfleet-subgraph/issues"
+  },
+  "homepage": "https://github.com/niftyx/launchfleet-subgraph#readme",
+  "devDependencies": {
+    "@graphprotocol/graph-cli": "^0.20.0",
+    "@graphprotocol/graph-ts": "^0.20.0",
+    "@typescript-eslint/eslint-plugin": "^4.23.0",
+    "@typescript-eslint/parser": "^4.23.0",
+    "chalk": "^4.1.1",
+    "eslint": "^7.26.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "husky": "^6.0.0",
+    "lint-staged": "^11.0.0",
+    "mustache": "^4.2.0",
+    "prettier": "^2.3.0",
+    "typescript": "^4.2.4",
+    "yargs": "^17.0.1"
+  }
+}

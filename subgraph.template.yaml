@@ -1,0 +1,56 @@
+specVersion: 0.0.2
+description: launchfleet
+repository: https://github.com/niftyx/launchfleet-subgraph.git
+schema:
+  file: ./schema.graphql
+
+dataSources:
+  - kind: ethereum/contract
+    name: PoolFactory
+    network: "{{network}}"
+    source:
+      abi: PoolFactory
+      address: "{{address_factory}}"
+      startBlock: {{startBlock_factory}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      file: ./src/mappings/factory.ts
+      entities:
+        - Pool
+      abis:
+        - name: PoolFactory
+          file: ./abis/PoolFactory.json
+      eventHandlers:
+        - event: PoolCreated(indexed address,indexed address)
+          handler: handleNewPool
+
+templates:
+  - kind: ethereum/contract
+    name: Pool
+    network: "{{network}}"
+    source:
+      abi: Pool
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      file: ./src/mappings/pool.ts
+      entities:
+        - Pool
+        - PoolHistory
+      abis:
+        - name: Pool
+          file: ./abis/Pool.json
+      eventHandlers:
+        - event: PoolInitialized(address,address,uint256,uint256,uint256,uint256)
+          handler: handlePoolInitialized
+        - event: PoolBaseDataInitialized(uint8,uint256,uint256,uint256,string)
+          handler: handlePoolBaseDataInitialized
+        - event: MetaDataChanged(string)
+          handler: handlePoolMetaDataChanged
+        - event: PoolProgressChanged(address,uint256,uint256,uint256)
+          handler: handlePoolProgressChanged
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handlePoolOwnershipTransferred

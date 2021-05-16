@@ -1,0 +1,31 @@
+type Pool @entity {
+  id: ID!
+  address: Bytes!
+  creator: Bytes!
+  token: Bytes!
+  tokenTarget: BigInt!
+  multiplier: BigInt!
+  weiToken: Bytes!
+  minWei: BigInt!
+  maxWei: BigInt!
+  poolType: Int!
+  startTime: BigInt!
+  endTime: BigInt!
+  claimTime: BigInt!
+  meta: Bytes!
+  totalOwed: BigInt!
+  weiRaised: BigInt!
+  history: [PoolHistory!] @derivedFrom(field: "pool")
+  createTimestamp: BigInt!
+  updateTimestamp: BigInt!
+}
+
+type PoolHistory @entity {
+  id: ID!
+  txHash: Bytes!
+  user: Bytes!
+  amount: BigInt!
+  poolId: Bytes!
+  pool: Pool!
+  timestamp: BigInt!
+}
