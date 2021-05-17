@@ -12,10 +12,21 @@ type Pool @entity {
   startTime: BigInt!
   endTime: BigInt!
   claimTime: BigInt!
-  meta: Bytes!
+  meta: String!
   totalOwed: BigInt!
   weiRaised: BigInt!
   history: [PoolHistory!] @derivedFrom(field: "pool")
+  createTimestamp: BigInt!
+  updateTimestamp: BigInt!
+  uniqueMembers: [UniquePoolMember!] @derivedFrom(field: "pool")
+  totalMembers: BigInt!
+}
+
+type UniquePoolMember @entity {
+  id: ID! # ${poolId}-${userAddress}
+  user: Bytes!
+  pool: Pool!
+  totalRaised: BigInt!
   createTimestamp: BigInt!
   updateTimestamp: BigInt!
 }
@@ -25,7 +36,6 @@ type PoolHistory @entity {
   txHash: Bytes!
   user: Bytes!
   amount: BigInt!
-  poolId: Bytes!
   pool: Pool!
   timestamp: BigInt!
 }

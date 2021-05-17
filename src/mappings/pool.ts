@@ -7,8 +7,13 @@ import {
   PoolProgressChanged,
   OwnershipTransferred,
 } from "../../generated/templates/Pool/Pool";
-import { Bytes } from "@graphprotocol/graph-ts";
+import { Bytes, log } from "@graphprotocol/graph-ts";
 import { createPoolHistory } from "../models/poolHistory";
+import {
+  createUniquePoolMember,
+  getUniquePoolMember,
+} from "../models/uniqueMember";
+import { ONE } from "../utils/number";
 
 export function handlePoolInitialized(event: PoolInitialized): void {
   let params = event.params;
@@ -37,7 +42,7 @@ export function handlePoolBaseDataInitialized(
     pool.startTime = params.startTime;
     pool.endTime = params.endTime;
     pool.claimTime = params.claimTime;
-    pool.meta = Bytes.fromUTF8(params.meta) as Bytes;
+    pool.meta = params.meta;
 
     pool.updateTimestamp = event.block.timestamp;
 
@@ -48,7 +53,7 @@ export function handlePoolMetaDataChanged(event: MetaDataChanged): void {
   let params = event.params;
   let pool = getPool(event.address);
   if (pool != null) {
-    pool.meta = Bytes.fromUTF8(params.meta) as Bytes;
+    pool.meta = params.meta;
 
     pool.updateTimestamp = event.block.timestamp;
 
@@ -62,6 +67,22 @@ export function handlePoolProgressChanged(event: PoolProgressChanged): void {
   if (pool != null) {
     pool.totalOwed = params.totalOwed;
     pool.weiRaised = params.weiRaised;
+
+    let member = getUniquePoolMember(pool as Pool, params.buyer);
+
+    if (member != null) {
+      member.totalRaised = member.totalRaised.plus(params.amount);
+      member.updateTimestamp = event.block.timestamp;
+      member.save();
+    } else {
+      pool.totalMembers = pool.totalMembers.plus(ONE);
+      createUniquePoolMember(
+        pool as Pool,
+        params.buyer,
+        params.amount,
+        event.block.timestamp
+      );
+    }
 
     pool.save();
 

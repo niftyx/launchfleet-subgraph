@@ -32,11 +32,10 @@ export function createPool(
   pool.startTime = ZERO;
   pool.endTime = ZERO;
   pool.claimTime = ZERO;
-  pool.meta = Bytes.fromUTF8("") as Bytes;
+  pool.meta = "";
   pool.totalOwed = ZERO;
   pool.weiRaised = ZERO;
-  pool.startTime = ZERO;
-  pool.endTime = ZERO;
+  pool.totalMembers = ZERO;
   pool.createTimestamp = timestamp;
   pool.updateTimestamp = timestamp;
 

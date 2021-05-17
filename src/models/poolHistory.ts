@@ -13,7 +13,6 @@ export function createPoolHistory(
   poolHistory.txHash = txId;
   poolHistory.user = user;
   poolHistory.amount = amount;
-  poolHistory.poolId = Bytes.fromHexString(pool.id) as Bytes;
   poolHistory.pool = pool.id;
   poolHistory.timestamp = timestamp;
   poolHistory.save();
